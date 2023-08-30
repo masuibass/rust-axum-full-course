@@ -1,6 +1,6 @@
 #![allow(unused)]
 
-use std::net::SocketAddr;
+use self::error::{Error, Result};
 
 use axum::{
     extract::{Path, Query},
@@ -9,7 +9,10 @@ use axum::{
     Router,
 };
 use serde::Deserialize;
+use std::net::SocketAddr;
 use tower_http::services::ServeDir;
+
+mod error;
 
 #[tokio::main]
 async fn main() {
