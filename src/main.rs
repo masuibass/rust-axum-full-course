@@ -12,21 +12,25 @@ use serde::Deserialize;
 
 #[tokio::main]
 async fn main() {
-    let routes_hello = Router::new()
-        .route("/hello", get(handler_hello))
-        .route("/hello2/:name", get(handler_hello2));
+    let routes_all = Router::new().merge(routes_hello());
 
     // region: --- Start Server
     let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
     println!("->> LISTENING on {addr}\n");
     axum::Server::bind(&addr)
-        .serve(routes_hello.into_make_service())
+        .serve(routes_all.into_make_service())
         .await
         .unwrap();
     // endregion: --- Start Server
 }
 
-// region: --- Handler Hello
+// region: --- Routes Hello
+fn routes_hello() -> Router {
+    Router::new()
+        .route("/hello", get(handler_hello))
+        .route("/hello2/:name", get(handler_hello2))
+}
+
 #[derive(Debug, Deserialize)]
 struct HelloParams {
     name: Option<String>,
@@ -44,4 +48,4 @@ async fn handler_hello2(Path(name): Path<String>) -> impl IntoResponse {
 
     Html(format!("Hello <strong>{name}</strong>"))
 }
-// endregion: --- Handler Hello
+// endregion: --- Routes Hello
