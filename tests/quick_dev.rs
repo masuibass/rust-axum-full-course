@@ -14,10 +14,12 @@ async fn quick_dev() -> Result<()> {
         "/api/login",
         json!({
             "username": "demo1",
-            "pwd": "welcomeDDD"
+            "pwd": "welcome"
         }),
     );
     req_login.await?.print().await?;
+
+    hc.do_get("/hello2/Mutsuo").await?.print().await?;
 
     Ok(())
 }
